@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .add-member-btn {
+            display: inline-block;
+            margin-bottom: 15px;
+            text-decoration: none;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .admin-link {
+            display: inline-block;
+            margin-left: 15px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Content -->
+    <h1>Membership Tracker</h1>
+
+    <!-- Buttons Section -->
+    <a href="{% url 'add_member' %}" class="add-member-btn">Add New Member</a>
+    <a href="/admin/" class="admin-link">Admin Portal</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Date Entered</th>
+                <th>Date Membership Is Over</th>
+                <th>Call Sign</th>
+                <th>Paid in Full</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+                <tr>
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.last_name }}</td>
+                    <td>{{ member.phone_number }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.date_entered }}</td>
+                    <td>{{ member.date_membership_over }}</td>
+                    <td>{{ member.call_sign }}</td>
+                    <td>{{ member.paid_in_full|yesno:"Yes,No" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

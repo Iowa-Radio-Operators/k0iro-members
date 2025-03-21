@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <style>
+        .back-btn {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add a New Member</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Member</button>
+    </form>
+
+    <!-- Go Back Button -->
+    <a href="{% url 'member_list' %}" class="back-btn">Go Back</a>
+</body>
+</html>
