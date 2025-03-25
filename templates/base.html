@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Iowa Radio Operators{% endblock %}</title>
+    
+    <link rel="icon" href="{% static 'favicons/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'scss/main.css' %}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
+        crossorigin="anonymous"></script>
+</head>
+<body class="td-home d-flex flex-column min-vh-100">
+    {% include 'navbar.html' %}
+
+    <main class="container-fluid flex-grow-1" style="padding-top: 60px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'footer.html' %}
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

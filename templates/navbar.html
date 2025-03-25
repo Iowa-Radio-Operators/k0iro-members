@@ -1,0 +1,42 @@
+<header>
+    <nav class="td-navbar js-navbar-scroll td-navbar-cover" data-bs-theme="dark">
+        <div class="container-fluid flex-column flex-md-row">
+            <a class="navbar-brand" href="/">
+                <span class="navbar-brand__logo navbar-logo">
+                    <!-- SVG logo here -->
+                </span>
+                <span class="navbar-brand__name">Iowa Radio Operators</span>
+            </a>
+            <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">Admin Portal</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'member_list' %}">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_member' %}">Add Member</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'delete_users' %}">Delete Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="nav-link btn btn-link" type="submit">Logout</button>
+                        </form>
+                    </li>                 
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

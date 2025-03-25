@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Delete Users{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+    <h2>Delete Users</h2>
+    <form method="post">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Call Sign</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="users_to_delete" value="{{ member.id }}">
+                    </td>
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.last_name }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.call_sign }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" name="confirm" class="btn btn-danger">Confirm Deletion</button>
+        <button type="submit" name="cancel" class="btn btn-secondary">Cancel</button>
+    </form>
+</div>
+{% endblock %}
