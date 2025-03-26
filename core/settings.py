@@ -38,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.session_timeout_middleware.SessionIdleTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -118,3 +119,15 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'  # Redirect to the homepage or members list
+
+# Set the session engine (default is database-backed sessions)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Set the session timeout (in seconds)
+SESSION_COOKIE_AGE = 1800  # 30 minutes (1800 seconds)
+
+# Ensure sessions expire on browser close (optional, for added security)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Optionally, only set session expiry if users are inactive
+SESSION_SAVE_EVERY_REQUEST = False
