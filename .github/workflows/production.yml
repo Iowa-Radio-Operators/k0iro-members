@@ -14,7 +14,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Stop Django service
-      run: sudo systemctl stop k0iromembers.service
+      run: |
+        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl k0iromembers.service
+
 
     - name: Pull latest changes
       run: git pull
@@ -43,4 +45,5 @@ jobs:
 
 
     - name: Start Django service
-      run: sudo systemctl start k0iromembers.service
+      run: |
+        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl start k0iromembers.service
