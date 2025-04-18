@@ -13,8 +13,8 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
 
-    - name: Set Working Directory
-      run: cd /var/www/k0iro-members && pwd
+    #- name: Set Working Directory
+    #  run: cd /var/www/k0iro-members && pwd
 
     - name: Stop Django service
       run: |
@@ -25,12 +25,7 @@ jobs:
 
     - name: Load pyenv and Activate Virtualenv
       run: |
-        export PYENV_ROOT="$HOME/.pyenv"
-        export PATH="$PYENV_ROOT/bin:$PATH"
-        eval "$(pyenv init --path)"
-        eval "$(pyenv virtualenv-init -)"
-        
-        pyenv activate k0iromem
+
         python --version
         pip install -r requirements.txt
 
