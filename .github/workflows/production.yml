@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [organization, meshmapdmz]
+    runs-on: [meshmapdmz]
 
     steps:
     - name: Check out repository
