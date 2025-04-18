@@ -13,15 +13,17 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
 
+    - name: Set Working Directory
+      run: cd /var/www/k0iromembers && pwd
+
     - name: Stop Django service
       run: |
         echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl stop k0iromembers.service
 
-
     - name: Pull latest changes
       run: git pull
 
-    - name: Set up Python environment
+    - name: Load pyenv and Activate Virtualenv
       run: |
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
@@ -29,6 +31,7 @@ jobs:
         eval "$(pyenv virtualenv-init -)"
         
         pyenv activate k0iromem
+        python --version
         pip install -r requirements.txt
 
 
