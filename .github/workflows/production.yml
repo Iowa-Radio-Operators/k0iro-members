@@ -10,14 +10,6 @@ jobs:
     runs-on: [meshmapdmz]
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v4
-      with:
-        path: /var/www/k0iro-members
-
-    #- name: Set Working Directory
-    #  run: cd /var/www/k0iro-members && pwd
-
     - name: Stop Django service
       run: |
         echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl stop k0iromembers.service
