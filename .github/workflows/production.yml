@@ -1,4 +1,4 @@
-name: 
+name: k0iro members build
 
 on:
   push:
@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
+      with:
+        path: /var/www/k0iro-members
 
     #- name: Set Working Directory
     #  run: cd /var/www/k0iro-members && pwd
