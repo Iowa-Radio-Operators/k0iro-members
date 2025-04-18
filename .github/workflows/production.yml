@@ -21,23 +21,12 @@ jobs:
         echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl stop k0iromembers.service
 
     - name: Pull latest changes
+      working-directory: /var/www/k0iro-members
       run: git pull
 
-    - name: Load pyenv and Activate Virtualenv
-      run: |
-
-        python --version
-        pip install -r requirements.txt
-
-
     - name: Run Django migrations
+      working-directory: /var/www/k0iro-members
       run: |
-        export PYENV_ROOT="$HOME/.pyenv"
-        export PATH="$PYENV_ROOT/bin:$PATH"
-        eval "$(pyenv init --path)"
-        eval "$(pyenv virtualenv-init -)"
-
-        pyenv activate k0iromem
         python manage.py makemigrations
         python manage.py migrate
 
