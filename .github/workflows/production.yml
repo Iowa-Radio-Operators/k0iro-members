@@ -15,7 +15,7 @@ jobs:
 
     - name: Stop Django service
       run: |
-        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl k0iromembers.service
+        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl stop k0iromembers.service
 
 
     - name: Pull latest changes
