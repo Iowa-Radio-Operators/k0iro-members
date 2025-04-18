@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, meshmakdmz, org-runner-label]
+    runs-on: [self-hosted, meshmakdmz]
 
     steps:
     - name: Check out repository
