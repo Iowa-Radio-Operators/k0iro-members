@@ -18,6 +18,10 @@ jobs:
       working-directory: /var/www/k0iro-members
       run: git pull
 
+    - name: Install Any Requirements
+      working-directory: /var/www/k0iro-members
+      run: pip install -r requirements.txt
+
     - name: Run Django migrations
       working-directory: /var/www/k0iro-members
       run: |
