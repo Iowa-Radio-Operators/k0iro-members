@@ -1,0 +1,46 @@
+name: 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on:  meshmapdmz
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Stop Django service
+      run: sudo systemctl stop k0iromembers.service
+
+    - name: Pull latest changes
+      run: git pull
+
+    - name: Set up Python environment
+      run: |
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+        eval "$(pyenv virtualenv-init -)"
+        
+        pyenv activate k0iromem
+        pip install -r requirements.txt
+
+
+    - name: Run Django migrations
+      run: |
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+        eval "$(pyenv virtualenv-init -)"
+
+        pyenv activate k0iromem
+        python manage.py makemigrations
+        python manage.py migrate
+
+
+    - name: Start Django service
+      run: sudo systemctl start k0iromembers.service
