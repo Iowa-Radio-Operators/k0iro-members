@@ -6,29 +6,17 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: [meshmapdmz]
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-    - name: Stop Django service
-      run: |
-        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl stop k0iromembers.service
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Pull latest changes
-      working-directory: /var/www/k0iro-members
-      run: git pull
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
-    - name: Install Any Requirements
-      working-directory: /var/www/k0iro-members
-      run: pip install -r requirements.txt
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/django-app:latest .
 
-    - name: Run Django migrations
-      working-directory: /var/www/k0iro-members
-      run: |
-        python manage.py makemigrations
-        python manage.py migrate
-
-
-    - name: Start Django service
-      run: |
-        echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl start k0iromembers.service
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/${{ github.repository_owner }}/django-app:latest
