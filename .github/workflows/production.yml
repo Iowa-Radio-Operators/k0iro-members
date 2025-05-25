@@ -16,10 +16,14 @@ jobs:
         id: lowercase
         run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
-      - name: Debug Secret
-        run: echo "::debug::GHCR_PAT is set"
-        env:
-          GHCR_PAT: ${{ secrets.GHRC_TOKEN }}        
+      - name: Debug Secret Access
+        run: |
+          if [ -z "${{ secrets.GHRC_TOKEN }}" ]; then
+            echo "::error:: GHRC_TOKEN is empty or not accessible!"
+            exit 1
+          else
+            echo "GHRC_TOKEN exists and is accessible."
+          fi  
 
       - name: Log in to GitHub Container Registry
         run: docker login ghcr.io -u $GITHUB_ACTOR --password ${{ secrets.GHRC_TOKEN }}
