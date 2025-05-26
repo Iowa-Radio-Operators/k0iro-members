@@ -10,9 +10,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: production  # Adjust based on where GHRC_TOKEN is stored
+    permissions:
+      contents: read
+      packages: write
+      
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Convert owner name to lowercase
         id: lowercase
