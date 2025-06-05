@@ -1,11 +1,10 @@
-name: Cleanup Containers on Merge
+name: Cleanup Containers on Branch Delete
 
 on:
   delete:
 
 jobs:
   cleanup:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: branch-builds  # Adjust based on where GHRC_TOKEN is stored
     steps:
@@ -13,9 +12,9 @@ jobs:
         id: lowercase
         run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
-      - name: Get merged branch name
+      - name: Get deleted branch name
         id: branch_name
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr '/' '-')" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=${{ github.event.ref }}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
