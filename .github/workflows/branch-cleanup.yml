@@ -9,6 +9,7 @@ jobs:
   cleanup:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    environment: branch-builds  # Adjust based on where GHRC_TOKEN is stored
     steps:
       - name: Convert owner name to lowercase
         id: lowercase
