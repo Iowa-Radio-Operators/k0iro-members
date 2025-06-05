@@ -6,7 +6,10 @@ on:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    environment: branch-builds  # Adjust based on where GHRC_TOKEN is stored
+    environment: branch-builds  # Ensure the correct environment where GHRC_TOKEN is stored
+    permissions:
+      packages: write  # Required for deleting GHCR images
+
     steps:
       - name: Convert owner name to lowercase
         id: lowercase
@@ -19,5 +22,20 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
-      - name: Delete Container
-        run: docker rmi ghcr.io/${{ env.OWNER_LC }}/k0iro-members:${{ env.BRANCH_NAME }} || true
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+
+      - name: Authenticate `gh` CLI
+        run: echo "${{ secrets.GHRC_TOKEN }}" | gh auth login --with-token
+
+      - name: Get list of image versions for deleted branch
+        run: |
+          gh api /user/packages/container/k0iro-members/versions --jq '.[] | select(.metadata.container.tags[] | contains("${{ env.BRANCH_NAME }}")) | .id' > version_ids.txt
+
+      - name: Delete all images & tags for the branch
+        run: |
+          for ID in $(cat version_ids.txt); do
+            gh api --method DELETE /user/packages/container/k0iro-members/versions/$ID
+          done
