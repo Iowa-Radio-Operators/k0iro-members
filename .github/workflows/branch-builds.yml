@@ -16,6 +16,13 @@ jobs:
         id: lowercase
         run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
+      - name: Debug Environment Variables
+        run: |
+            echo "OWNER_LC=${{ env.OWNER_LC }}"
+            echo "BRANCH_NAME=${{ env.BRANCH_NAME }}"
+            echo "GHRC_TOKEN=${{ secrets.GHRC_TOKEN }}"
+
+
       - name: Get branch name and sanitize it
         id: branch_name
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr '/' '-')" >> $GITHUB_ENV
