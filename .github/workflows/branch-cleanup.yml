@@ -1,9 +1,7 @@
 name: Cleanup Containers on Merge
 
 on:
-  pull_request:
-    types:
-      - closed
+  delete:
 
 jobs:
   cleanup:
