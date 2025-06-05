@@ -1,0 +1,37 @@
+name: Build Per Branch
+
+on:
+  push:
+    branches-ignore:
+      - main  # Prevents main from running this workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: branch-builds  # Adjust based on where GHRC_TOKEN is stored
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Convert owner name to lowercase
+        id: lowercase
+        run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
+      - name: Debug Environment Variables
+        run: |
+            echo "OWNER_LC=${{ env.OWNER_LC }}"
+            echo "BRANCH_NAME=${{ env.BRANCH_NAME }}"
+            echo "GHRC_TOKEN=${{ secrets.GHRC_TOKEN }}"
+
+      - name: Get branch name and sanitize it
+        id: branch_name
+        run: echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')" >> $GITHUB_ENV
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ env.OWNER_LC }}/k0iro-members:${{ env.BRANCH_NAME }} .
+
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/${{ env.OWNER_LC }}/k0iro-members:${{ env.BRANCH_NAME }}
