@@ -1,12 +1,15 @@
-name: Cleanup Containers on Branch Delete
+name: Cleanup Containers on Merge
 
 on:
-  delete:
+  pull_request:
+    types:
+      - closed
 
 jobs:
   cleanup:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    environment: branch-builds  # Ensure the correct environment where GHRC_TOKEN is stored
+    environment: branch-builds
     permissions:
       packages: write  # Required for deleting GHCR images
 
@@ -15,9 +18,9 @@ jobs:
         id: lowercase
         run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
-      - name: Get deleted branch name
+      - name: Get merged branch name
         id: branch_name
-        run: echo "BRANCH_NAME=${{ github.event.ref }}" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
@@ -27,10 +30,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gh
 
-      - name: Authenticate `gh` CLI
+      - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GHRC_TOKEN }}" | gh auth login --with-token
 
-      - name: Get list of image versions for deleted branch
+      - name: Get list of image versions for merged branch
         run: |
           gh api /user/packages/container/k0iro-members/versions --jq '.[] | select(.metadata.container.tags[] | contains("${{ env.BRANCH_NAME }}")) | .id' > version_ids.txt
 
