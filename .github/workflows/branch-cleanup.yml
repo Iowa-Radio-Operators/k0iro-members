@@ -1,13 +1,10 @@
-name: Cleanup Containers on Merge
+name: Cleanup Containers on Branch Delete
 
 on:
-  pull_request:
-    types:
-      - closed
+  delete:
 
 jobs:
   cleanup:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: branch-builds
     permissions:
@@ -18,9 +15,9 @@ jobs:
         id: lowercase
         run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
-      - name: Get merged branch name
+      - name: Get deleted branch name
         id: branch_name
-        run: echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=${{ github.event.ref }}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHRC_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
@@ -33,11 +30,11 @@ jobs:
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GHRC_TOKEN }}" | gh auth login --with-token
 
-      - name: Get list of image versions for merged branch
+      - name: Get all image versions for repository
         run: |
-          gh api /user/packages/container/k0iro-members/versions --jq '.[] | select(.metadata.container.tags[] | contains("${{ env.BRANCH_NAME }}")) | .id' > version_ids.txt
+          gh api /user/packages/container/k0iro-members/versions --jq '.[].id' > version_ids.txt
 
-      - name: Delete all images & tags for the branch
+      - name: Delete all versions
         run: |
           for ID in $(cat version_ids.txt); do
             gh api --method DELETE /user/packages/container/k0iro-members/versions/$ID
